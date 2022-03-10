@@ -27,7 +27,7 @@ dpd_df = pd.read_csv("../csvs/dpd-full.csv", sep = "\t", dtype=str)
 dpd_df_length =  len(dpd_df)
 
 print(f"{timeis()} {yellow}mapmaker")
-print(f"{timeis()} {yellow}----------------------------------------")
+print(f"{timeis()} ----------------------------------------")
 
 def test_map_same():
 	print(f"{timeis()} {green}test if map has changed")
@@ -334,7 +334,7 @@ for row in range(dpd_df_length): #dpd_df_length
 	pattern = dpd_df.loc[row, "Pattern"]
 		
 	if pos != "idiom" and (map_same == False or pattern in pattern_changed or headword in stem_pattern_changed or headword in data_file_missing or headword in data_file_zero or headword in html_file_missing):
-		print(f"{timeis()} {row}/{dpd_df_length} {headword}")
+		print(f"{timeis()} {row}/{dpd_df_length}\t{headword}")
 	
 		output_file = open(f"output/data/{headword}.csv", "w")
 
@@ -374,7 +374,7 @@ for row in range(dpd_df_length): #dpd_df_length
 	pattern = dpd_df.loc[row, "Pattern"]
 	
 	if pos != "idiom" and (map_same == False or pattern in pattern_changed or headword in stem_pattern_changed or headword in data_file_missing or headword in data_file_zero or headword in html_file_missing):
-		print(f"{timeis()} {row}/{dpd_df_length} {headword}")
+		print(f"{timeis()} {row}/{dpd_df_length}\t{headword}")
 
 		try:
 			data = pd.read_csv(f"output/data/{headword}.csv", sep=",", index_col=0, header=None, dtype=int)
@@ -515,3 +515,6 @@ for row in range(dpd_df_length): #dpd_df_length
 		
 		with open(f"output/html/{headword}.html","w") as f:
 			f.write(template.style.background_gradient(axis=None, low=0, vmin=0, cmap='Blues').render())
+	
+print(f"{timeis()} fin")
+print(f"{timeis()} ----------------------------------------")
