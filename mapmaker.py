@@ -31,11 +31,13 @@ print(f"{timeis()} {yellow}----------------------------------------")
 
 def test_map_same():
 	print(f"{timeis()} {green}test if map has changed")
+
 	global map_same
 	new_map = pd.read_csv("map.csv", sep="\t", index_col=0)
 	with open ("output/pickle tests/old map", "rb") as old_map_file:
 		old_map = pickle.load(old_map_file)
 	map_same = new_map.equals(old_map)
+
 	if map_same != True:
 		print(f"{timeis()} {red}map has changed")
 	with open ("output/pickle tests/old map", "wb") as old_map_file:
@@ -46,9 +48,11 @@ test_map_same()
 
 def test_inflection_pattern_changed():
 	print(f"{timeis()} {green}test if any inflection patterns have changed")
+
 	global pattern_changed
 	with open("output/pickle tests/pattern_changed", "rb") as pc_pickle:
 		pattern_changed = pickle.load(pc_pickle)
+
 	if len(pattern_changed) != 0:
 		print(f"{timeis()} {red}{pattern_changed} {len(pattern_changed)}")
 
@@ -57,9 +61,11 @@ test_inflection_pattern_changed()
 
 def test_stem_pattern_changed():
 	print(f"{timeis()} {green}test if any stems or patterns have changed")
+
 	global stem_pattern_changed
 	with open("output/pickle tests/stem_pattern_differences", "rb") as pickle_file:
 		stem_pattern_changed = pickle.load(pickle_file)
+
 	if len(stem_pattern_changed) != 0:
 		print(f"{timeis()} {red}{stem_pattern_changed} {len(stem_pattern_changed)}")
 
@@ -68,6 +74,7 @@ test_stem_pattern_changed()
 
 def test_data_file_missing():
 	print(f"{timeis()} {green}test if data file is missing")
+
 	global data_file_missing
 	data_file_missing = []
 	for row in range(dpd_df_length): 
@@ -75,6 +82,7 @@ def test_data_file_missing():
 		pos = dpd_df.loc[row, "POS"]
 		if not os.path.isfile(f"output/data/{headword}.csv") and pos != "idiom":
 			data_file_missing.append(headword)
+
 	if len(data_file_missing) != 0:
 		print(f"{timeis()} {red}{data_file_missing} {len(data_file_missing)}")
 
@@ -83,6 +91,7 @@ test_data_file_missing()
 
 def test_data_file_zero():
 	print(f"{timeis()} {green}test if data file is 0 kb")
+
 	global data_file_zero
 	data_file_zero = []
 	for row in range(dpd_df_length):
@@ -100,6 +109,7 @@ test_data_file_zero()
 
 def test_html_file_missing():
 	print(f"{timeis()} {green}test if html file is missing")
+
 	global html_file_missing
 	html_file_missing = []
 	for row in range(dpd_df_length):
@@ -108,6 +118,7 @@ def test_html_file_missing():
 		if pos != "idiom":
 			if not os.path.isfile(f"output/html/{headword}.html"):
 				html_file_missing.append(headword)
+
 	if len(html_file_missing) != 0:
 		print(f"{timeis()} {red}{html_file_missing} {len(html_file_missing)}")
 
@@ -116,6 +127,7 @@ test_html_file_missing()
 
 def test_delete_old_data_files():
 	print(f"{timeis()} {green}deleting old data files ")
+
 	global headwords_list
 	headwords_list = dpd_df["Pāli1"].tolist()
 	for root, dirs, files in os.walk("output/data", topdown=True):
@@ -129,6 +141,7 @@ test_delete_old_data_files()
 
 def test_delete_old_html_files():
 	print(f"{timeis()} {green}deleting old html files ")
+	
 	for root, dirs, files in os.walk("output/html", topdown=True):
 		for file in files:
 			file_clean = re.sub(".html", "", file)
@@ -346,6 +359,7 @@ for row in range(dpd_df_length): #dpd_df_length
 			section += 1
 
 		output_file.close()
+
 if len(errorlog) != 0:
 	print(f"{timeis()} {red}file read errors {errorlog} {len(errorlog)}")
 
@@ -457,11 +471,11 @@ for row in range(dpd_df_length): #dpd_df_length
 		map.iloc[8,2] = sutta_saṃyutta_ṭīkā.csv
 				
 		map.iloc[9,0] = sutta_aṅguttara_mūla.csv
-		map.iloc[9,1] = 	sutta_aṅguttara_aṭṭhakathā.csv
+		map.iloc[9,1] = sutta_aṅguttara_aṭṭhakathā.csv
 		map.iloc[9,2] = sutta_aṅguttara_ṭīkā.csv
 				
 		map.iloc[10,0] = sutta_khuddaka1_mūla.csv
-		map.iloc[10,1] = 	sutta_khuddaka1_aṭṭhakathā.csv
+		map.iloc[10,1] = sutta_khuddaka1_aṭṭhakathā.csv
 				
 		map.iloc[11,0] = sutta_khuddaka2_mūla.csv
 		map.iloc[11,1] = sutta_khuddaka2_aṭṭhakathā.csv
@@ -479,14 +493,10 @@ for row in range(dpd_df_length): #dpd_df_length
 		map.iloc[14,1] = abhidhamma_dhātukathā_aṭṭhakathā.csv
 		map.iloc[14,2] = abhidhamma_dhātukathā_ṭīkā.csv
 				
-		map.iloc[15,0] = abhidhamma_puggalapaññatti_mūla.csv
-				
+		map.iloc[15,0] = abhidhamma_puggalapaññatti_mūla.csv		
 		map.iloc[16,0] = abhidhamma_kathāvatthu_mūla.csv
-				
 		map.iloc[17,0] = abhidhamma_yamaka_mūla.csv
-				
-		map.iloc[18,0] = 	abhidhamma_paṭṭhāna_mūla.csv
-				
+		map.iloc[18,0] = abhidhamma_paṭṭhāna_mūla.csv
 		map.iloc[19,2] = abhidhamma_aññā_ṭīkā.csv
 				
 		map.iloc[20,1] = aññā_visuddhimagga.csv
