@@ -52,9 +52,9 @@ def test_inflection_pattern_changed():
 	global pattern_changed
 	with open("output/pickle tests/pattern_changed", "rb") as pc_pickle:
 		pattern_changed = pickle.load(pc_pickle)
-
-	if len(pattern_changed) != 0:
-		print(f"{timeis()} {red}{pattern_changed} {len(pattern_changed)}")
+	
+	for pattern in pattern_changed:
+		print(f"{timeis()} {pattern}")
 
 test_inflection_pattern_changed()
 
@@ -66,8 +66,8 @@ def test_stem_pattern_changed():
 	with open("output/pickle tests/stem_pattern_differences", "rb") as pickle_file:
 		stem_pattern_changed = pickle.load(pickle_file)
 
-	if len(stem_pattern_changed) != 0:
-		print(f"{timeis()} {red}{stem_pattern_changed} {len(stem_pattern_changed)}")
+	for item in stem_pattern_changed:
+		print(f"{timeis()} {item}")
 
 test_stem_pattern_changed()
 
@@ -82,9 +82,7 @@ def test_data_file_missing():
 		pos = dpd_df.loc[row, "POS"]
 		if not os.path.isfile(f"output/data/{headword}.csv") and pos != "idiom":
 			data_file_missing.append(headword)
-
-	if len(data_file_missing) != 0:
-		print(f"{timeis()} {red}{data_file_missing} {len(data_file_missing)}")
+			print(f"{timeis()} {row}/{dpd_df_length}\t{headword}")
 
 test_data_file_missing()
 
@@ -100,9 +98,7 @@ def test_data_file_zero():
 		if headword not in data_file_missing and pos != "idiom":
 			if os.path. getsize(f"output/data/{headword}.csv") == 0:
 				data_file_zero.append(headword)
-
-	if len(data_file_zero) != 0:
-		print(f"{timeis()} {red}{data_file_zero} {len(data_file_zero)}")
+				print(f"{timeis()} {row}/{dpd_df_length}\t{headword}")
 
 test_data_file_zero()
 
@@ -118,9 +114,8 @@ def test_html_file_missing():
 		if pos != "idiom":
 			if not os.path.isfile(f"output/html/{headword}.html"):
 				html_file_missing.append(headword)
+				print(f"{timeis()} {row}/{dpd_df_length}\t{headword}")
 
-	if len(html_file_missing) != 0:
-		print(f"{timeis()} {red}{html_file_missing} {len(html_file_missing)}")
 
 test_html_file_missing()
 
@@ -136,7 +131,7 @@ def test_delete_old_data_files():
 				file_clean = re.sub(".csv", "", file)
 				if file_clean not in headwords_list:
 					os.remove(f"output/data/{file}")
-					print(f"{timeis()} {red}{file}")
+					print(f"{timeis()} {file}")
 		except:
 			print(f"{timeis()} {red}{file} not found")
 
@@ -151,7 +146,7 @@ def test_delete_old_html_files():
 				file_clean = re.sub(".html", "", file)
 				if file_clean not in headwords_list:
 					os.remove(f"output/html/{file}")
-					print(f"{timeis()} {red}{file}")
+					print(f"{timeis()} {file}")
 			except:
 				print(f"{timeis()} {red}{file} not found")
 
@@ -357,14 +352,16 @@ aññā_sihaḷa_dict
 print(f"{timeis()} {green}making data csvs")
 pickle_dir = "../inflection generator/output/inflections/"
 errorlog = []
+total_count = 0
 
 for row in range(dpd_df_length): #dpd_df_length
 	headword = dpd_df.loc[row, "Pāli1"]
 	pos = dpd_df.loc[row, "POS"]
 	pattern = dpd_df.loc[row, "Pattern"]
-		
+	
 	if pos != "idiom" and (map_same == False or pattern in pattern_changed or headword in stem_pattern_changed or headword in data_file_missing or headword in data_file_zero or headword in html_file_missing):
-		print(f"{timeis()} {row}/{dpd_df_length}\t{headword}")
+		if total_count < 50 or row % 1000 == 0:
+			print(f"{timeis()} {row}/{dpd_df_length}\t{headword}")
 	
 		output_file = open(f"output/data/{headword}.csv", "w")
 
@@ -389,6 +386,7 @@ for row in range(dpd_df_length): #dpd_df_length
 			section += 1
 
 		output_file.close()
+		total_count += 1
 
 if len(errorlog) != 0:
 	print(f"{timeis()} {red}file read errors {errorlog} {len(errorlog)}")
@@ -398,13 +396,16 @@ if len(errorlog) != 0:
 print(f"{timeis()} {green}generating html files")
 template = pd.read_csv("map.csv", sep="\t", index_col=0)
 
+total_count = 0
+
 for row in range(dpd_df_length): #dpd_df_length
 	headword = dpd_df.loc[row, "Pāli1"]
 	pos = dpd_df.loc[row, "POS"]
 	pattern = dpd_df.loc[row, "Pattern"]
 	
 	if pos != "idiom" and (map_same == False or pattern in pattern_changed or headword in stem_pattern_changed or headword in data_file_missing or headword in data_file_zero or headword in html_file_missing):
-		print(f"{timeis()} {row}/{dpd_df_length}\t{headword}")
+		if total_count < 50 or row % 1000 == 0:
+			print(f"{timeis()} {row}/{dpd_df_length}\t{headword}")
 
 		try:
 			data = pd.read_csv(f"output/data/{headword}.csv", sep=",", index_col=0, header=None, dtype=int)
@@ -544,5 +545,6 @@ for row in range(dpd_df_length): #dpd_df_length
 
 		with open(f"output/html/{headword}.html","w") as f:
 			f.write(template.style.background_gradient(axis=None, low=0, vmin=0, cmap='Blues').render())
+		total_count += 1
 	
 print(f"{timeis()} ----------------------------------------")
