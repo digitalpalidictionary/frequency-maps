@@ -239,6 +239,11 @@ master_dict["aññā_nīti"] = aññā_nīti
 master_dict["aññā_pakiṇṇaka"] = aññā_pakiṇṇaka
 master_dict["aññā_sihaḷa"] = aññā_sihaḷa
 
+# ebt's
+
+ebts = ["vin01m.mul.xml.txt", "vin02m1.mul.xml.txt", "s0101m.mul.xml.txt", "s0102m.mul.xml.txt", "s0103m.mul.xml.txt", "s0201m.mul.xml.txt", "s0202m.mul.xml.txt", "s0203m.mul.xml.txt", "s0301m.mul.xml.txt", "s0302m.mul.xml.txt", "s0303m.mul.xml.txt", "s0304m.mul.xml.txt", "s0305m.mul.xml.txt", "s0401m.mul.xml.txt", "s0402m1.mul.xml.txt", "s0402m2.mul.xml.txt", "s0402m3.mul.xml.txt", "s0403m1.mul.xml.txt", "s0403m2.mul.xml.txt", "s0403m3.mul.xml.txt", "s0404m1.mul.xml.txt", "s0404m2.mul.xml.txt", "s0404m3.mul.xml.txt", "s0404m4.mul.xml.txt", "s0501m.mul.xml.txt", "s0502m.mul.xml.txt", "s0503m.mul.xml.txt", "s0504m.mul.xml.txt", "s0505m.mul.xml.txt", "s0508m.mul.xml.txt", "s0509m.mul.xml.txt", "s0513m.mul.xml.txt", "s0514m.mul.xml.txt"]
+master_dict["ebts"] = ebts
+
 # master list of sections
 
 list_of_sections = [
@@ -347,8 +352,6 @@ print(f"{timeis()} {green}making csvs of word counts")
 
 count = 0
 full_text = ""
-# ebts = ""
-# ebt_list = ["vinaya_pārājika_mūla", "vinaya_pācittiya_mūla", "sutta_dīgha_mūla", "sutta_majjhima_mūla", "sutta_saṃyutta_mūla', "sutta_aṅguttara_mūla", "sutta_khuddaka1_mūla"] 
 
 for key, values in master_dict.items():
 	print(f"{timeis()} {key}")
