@@ -354,21 +354,29 @@ pickle_dir = "../inflection generator/output/inflections/"
 errorlog = []
 total_count = 0
 
+with open("../inflection generator/output/all inflections dict", "rb") as f:
+	all_inflections_dict = pickle.load(f)
+
 for row in range(dpd_df_length): #dpd_df_length
 	headword = dpd_df.loc[row, "Pāli1"]
 	pos = dpd_df.loc[row, "POS"]
 	pattern = dpd_df.loc[row, "Pattern"]
 	
-	if pos != "idiom" and (map_same == False or pattern in pattern_changed or headword in stem_pattern_changed or headword in data_file_missing or headword in data_file_zero or headword in html_file_missing):
+	if pos != "idiom" and \
+	(map_same == False or \
+	pattern in pattern_changed or \
+	headword in stem_pattern_changed or \
+	headword in data_file_missing or \
+	headword in data_file_zero or \
+	headword in html_file_missing):
+
 		if total_count < 50 or row % 1000 == 0:
 			print(f"{timeis()} {row}/{dpd_df_length}\t{headword}")
 	
 		output_file = open(f"output/data/{headword}.csv", "w")
 
 		try:
-			with open(f"{pickle_dir}{headword}", "rb") as inflections_file:
-				inflections = pickle.load(inflections_file)
-				inflections = (inflections)
+			inflections = all_inflections_dict[headword]["inflections"]
 		except:
 			print(f"{timeis()} {red}{headword} error! why!?")
 			errorlog.append(headword)
