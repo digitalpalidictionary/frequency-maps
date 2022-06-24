@@ -5,24 +5,10 @@ import os
 import pickle
 import re
 from datetime import datetime
+from timeis import timeis, yellow, white, green, blue, red, tic, toc
 
 
-def timeis():
-	global blue
-	global yellow
-	global green
-	global red
-	global white
-
-	blue = "\033[38;5;33m" #blue
-	green = "\033[38;5;34m" #green
-	red= "\033[38;5;160m" #red
-	yellow = "\033[38;5;220m" #yellow
-	white = "\033[38;5;251m" #white
-	now = datetime.now()
-	current_time = now.strftime("%Y-%m-%d %H:%M:%S")
-	return (f"{blue}{current_time}{white}")
-
+tic()
 dpd_df = pd.read_csv("../csvs/dpd-full.csv", sep = "\t", dtype=str)
 dpd_df_length =  len(dpd_df)
 
@@ -44,7 +30,6 @@ def test_map_same():
 		pickle.dump(new_map, old_map_file)
 
 test_map_same()
-
 
 def test_inflection_pattern_changed():
 	print(f"{timeis()} {green}test if any inflection patterns have changed")
@@ -554,5 +539,5 @@ for row in range(dpd_df_length): #dpd_df_length
 		with open(f"output/html/{headword}.html","w") as f:
 			f.write(template.style.background_gradient(axis=None, low=0, vmin=0, cmap='Blues').render())
 		total_count += 1
-	
-print(f"{timeis()} ----------------------------------------")
+
+toc()
