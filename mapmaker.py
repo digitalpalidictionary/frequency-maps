@@ -6,6 +6,7 @@ import pickle
 import re
 from datetime import datetime
 from timeis import timeis, yellow, line, white, green, blue, red, tic, toc
+from delete_unused_files import del_unused_files
 
 def make_dpd_df():
 	print(f"{timeis()} {yellow}mapmaker")
@@ -96,33 +97,20 @@ def test_html_file_missing():
 
 
 def test_delete_old_data_files():
-	print(f"{timeis()} {green}deleting old data files ")
 
 	global headwords_list
 	headwords_list = dpd_df["Pāli1"].tolist()
-	for root, dirs, files in os.walk("output/data", topdown=True):
-		try:
-			for file in files:
-				file_clean = re.sub(".csv", "", file)
-				if file_clean not in headwords_list:
-					os.remove(f"output/data/{file}")
-					print(f"{timeis()} {file}")
-		except:
-			print(f"{timeis()} {red}{file} not found")
+	file_dir = "output/data/"
+	file_ext = ".csv"
+
+	del_unused_files(headwords_list, file_dir, file_ext)
 
 
 def test_delete_old_html_files():
-	print(f"{timeis()} {green}deleting old html files ")
-	
-	for root, dirs, files in os.walk("output/html", topdown=True):
-		for file in files:
-			try:
-				file_clean = re.sub(".html", "", file)
-				if file_clean not in headwords_list:
-					os.remove(f"output/html/{file}")
-					print(f"{timeis()} {file}")
-			except:
-				print(f"{timeis()} {red}{file} not found")
+
+	file_dir = "output/html/"
+	file_ext = ".html"
+	del_unused_files(headwords_list, file_dir, file_ext)
 
 
 def make_dfs_and_dicts():
@@ -429,8 +417,8 @@ def generates_html_files():
 	conjugations = ["aor", "cond", "fut", "imp", "imperf", "opt", "perf", "pr"]
 	declensions = ["adj", "card", "cs", "fem", "letter", "masc", "nt", "ordin", "pp", "pron", "prp", "ptp", "root", "suffix", "ve"]
 
-	with open("../exporter/assets/freq.css") as c:
-		css = c.read()
+	# with open("../exporter/assets/freq.css") as c:
+	# 	css = c.read()
 
 	for row in range(dpd_df_length):  # dpd_df_length
 		headword = dpd_df.loc[row, "Pāli1"]
@@ -655,15 +643,15 @@ def generates_html_files():
 			if value_max > 0:
 				
 				if pos in indeclinables or re.match(r"^!", stem):
-					map_html += f"""<p class="heading">Exact matches of the word <b>{headword_clean}</b> in the Chaṭṭha Saṅgāyana corpus.</b></p>"""
+					map_html += f"""<p class="heading">Exact matches of the word <b>{headword_clean}</b> in the Chaṭṭha Saṅgāyana corpus.</p>"""
 					
 				elif pos in conjugations:
-					map_html += f"""<p class="heading">Exact matches of <b>{headword_clean} and its conjugations</b> in the Chaṭṭha Saṅgāyana corpus.</b></p>"""
+					map_html += f"""<p class="heading">Exact matches of <b>{headword_clean} and its conjugations</b> in the Chaṭṭha Saṅgāyana corpus.</p>"""
 				
 				elif pos in declensions:
-					map_html += f"""<p class="heading">Exact matches of <b>{headword_clean} and its declensions</b> in the Chaṭṭha Saṅgāyana corpus.</b></p>"""
+					map_html += f"""<p class="heading">Exact matches of <b>{headword_clean} and its declensions</b> in the Chaṭṭha Saṅgāyana corpus.</p>"""
 
-				map_html += f"""<style>{css}</style>"""
+				# map_html += f"""<style>{css}</style>"""
 				
 				freq_map = freq_map.astype(str)
 				map_html += freq_map.to_html(escape=False)
@@ -675,7 +663,7 @@ def generates_html_files():
 				map_html = re.sub("<td>-1</td>", "<td class='void'></td>", map_html)
 
 			else:
-				map_html += f"""<p class="heading">There are no exact matches of <b>{headword_clean} or it's inflections</b> in the Chaṭṭha Saṅgāyana corpus.</b></p>"""
+				map_html += f"""<p class="heading">There are no exact matches of <b>{headword_clean} or it's inflections</b> in the Chaṭṭha Saṅgāyana corpus.</p>"""
 
 			with open(f"output/html/{headword}.html", "w") as f:
 				f.write(map_html)
