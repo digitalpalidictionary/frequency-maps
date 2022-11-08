@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import os
 import pickle
 import re
+import json
+import csv
+
 from datetime import datetime
 from timeis import timeis, yellow, line, white, green, blue, red, tic, toc
 from delete_unused_files import del_unused_files
@@ -382,7 +385,7 @@ def colourme(value, hi, low):
 	html = ""
 
 	if value == group0:
-		html = f"<td class='gr0'></td>"
+		html = f"<td class='gr0'>⠀</td>"
 	elif value > group0 and value <= group1:
 		html = f"<td class='gr1'>{value}</td>"
 	elif value > group1 and value <= group2:
@@ -662,6 +665,28 @@ def generates_html_files():
 				map_html = re.sub('<table border="1" class="dataframe">', "<table class = 'freq'>", map_html)
 				map_html = re.sub("<td>-1</td>", "<td class='void'></td>", map_html)
 
+				# add lines
+
+				map_html = re.sub(r"""<tr>
+      <th>Sutta Dīgha Nikāya</th>""", 
+	  """<tr class="line">
+      <th>Sutta Dīgha Nikāya</th>""",
+	  			map_html)
+				
+				map_html = re.sub(r"""<tr>
+      <th>Abhidhamma Dhammasaṅgaṇī</th>""", 
+	 			 """<tr class="line">
+      <th>Abhidhamma Dhammasaṅgaṇī</th>""",
+	  			map_html)
+
+				map_html = re.sub(r"""<tr>
+      <th>Aññā Abhidhamma</th>""",
+	  			"""<tr class="line">
+      <th>Aññā Abhidhamma</th>""",
+	  			map_html)  			
+
+
+
 			else:
 				map_html += f"""<p class="heading">There are no exact matches of <b>{headword_clean} or it's inflections</b> in the Chaṭṭha Saṅgāyana corpus.</p>"""
 
@@ -669,6 +694,32 @@ def generates_html_files():
 				f.write(map_html)
 
 			total_count += 1
+
+def make_map_data_json():
+	"""compile data files for json export to other apps"""
+	print(f"{timeis()} {green}compiling data files to json")
+	
+	file_dir = "output/data/"
+	data_dict = {}
+	counter = 0
+	
+	for root, dirs, files in os.walk(file_dir, topdown=True):
+		files_len = len(files)
+		for file_name in files:
+			file_name_clean = file_name.replace(".csv", "")
+
+			if counter %5000 ==0:
+				print(f"{timeis()} {white}{counter}/{files_len}\t{file_name_clean}")
+			
+			with open(f"{file_dir}{file_name}") as infile:
+				reader = csv.reader(infile)
+				data_dict[file_name_clean] = {rows[0]: int(rows[1]) for rows in reader}
+
+			counter += 1
+
+	data_json = json.dumps(data_dict, ensure_ascii=False, indent=4)
+	with open ("../dpd-app/data/frequency-data.json", "w") as f:
+		f.write(data_json)
 
 
 tic()
@@ -684,4 +735,5 @@ test_delete_old_html_files()
 dicts = make_dfs_and_dicts()
 make_data_dict(dpd_df)
 generates_html_files()
+make_map_data_json()
 toc()
