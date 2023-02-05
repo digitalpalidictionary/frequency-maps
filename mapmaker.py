@@ -425,7 +425,7 @@ def generates_html_files():
 
 	for row in range(dpd_df_length):  # dpd_df_length
 		headword = dpd_df.loc[row, "Pāli1"]
-		headword_clean = re.sub (" \d*$", "", headword)
+		headword_clean = re.sub (" \\d.*$", "", headword)
 		pos = dpd_df.loc[row, "POS"]
 		pattern = dpd_df.loc[row, "Pattern"]
 		stem = dpd_df.loc[row, "Stem"]
